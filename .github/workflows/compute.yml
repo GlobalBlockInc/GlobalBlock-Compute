@@ -1,0 +1,37 @@
+name: Auto Generate Compute Node Skeleton
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
+      - name: Create Compute Node File
+        run: |
+          echo "// Auto-generated Compute Node Skeleton for GlobalBlockInc" > compute.js
+          echo "const express = require('express');" >> compute.js
+          echo "const app = express();" >> compute.js
+          echo "const port = 6000;" >> compute.js
+          echo "" >> compute.js
+          echo "app.use(express.json());" >> compute.js
+          echo "" >> compute.js
+          echo "// Compute Task Endpoint" >> compute.js
+          echo "app.post('/compute-task', (req, res) => {" >> compute.js
+          echo "  res.send('Compute task received and processing.');" >> compute.js
+          echo "});" >> compute.js
+          echo "" >> compute.js
+          echo "app.listen(port, () => {" >> compute.js
+          echo "  console.log(\`GlobalBlock Compute Node listening on port \${port}\`);" >> compute.js
+          echo "});" >> compute.js
+
+      - name: Commit Generated Code
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add compute.js
+          git commit -m "Auto-generate Compute Node skeleton"
+          git push
